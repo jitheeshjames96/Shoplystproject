@@ -32,7 +32,7 @@ git remote add origin https://github.com/YOUR_USERNAME/aws-iac-webapp-demo.git
 git push -u origin main
 
 
-2. Upload To S3
+### 2. Upload To S3
 
 Create an S3 bucket (e.g., codebuildjitheesh) and upload:
 
@@ -42,13 +42,13 @@ security.yaml
 compute.yaml
 rds.yaml
 
-3. Update master.yaml (optional) or it can be manually enter via parameters while deploying stack via console
+### 3. Update master.yaml (optional) or it can be manually enter via parameters while deploying stack via console
 
 Replace each TemplateURL: with the correct S3 URL:
 
 TemplateURL: https://s3.amazonaws.com/codebuildjitheesh/vpc.yaml
 
-4. Deploy Master Stack via Console
+### 4. Deploy Master Stack via Console
 
 Go to AWS CloudFormation → Create stack → Upload https://s3.amazonaws.com/codebuildjitheesh/Projec/master.yaml) → Create stack
 
@@ -61,6 +61,6 @@ aws cloudformaton create-stack \
   --capabilities CAPABILITY_NAMED_IAM
 
 
-5. Cleanup
+### 5. Cleanup
 
-To avoid charges, delete the webapp-master stack—it deletes all nested resources automatically.
+Delete the shopalyst-stack deletes all nested resources automatically.
