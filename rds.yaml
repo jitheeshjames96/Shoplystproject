@@ -41,7 +41,7 @@ Resources:
       Engine: mysql
       DBName: shopalystdb
       MasterUsername: !Sub "{{resolve:secretsmanager:${DBSecretArn}::username}}"
-      MasterUserPassword: !Sub "{{resolve:secretsmanager:${DBSecretArn}::password}}"
+      MasterUserPassword: Admin123456!
       VPCSecurityGroups:
         - !Ref DBSecurityGroup
       DBSubnetGroupName: !Ref DBSubnetGroup
