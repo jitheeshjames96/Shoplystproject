@@ -2,14 +2,14 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: RDS MySQL Database with Secrets Manager for credentials
 
 Parameters:
-  VPCID:
-    Type: String
-  PrivateSubnet1:
-    Type: String
-  PrivateSubnet2:
-    Type: String
-  DBSG:
-    Type: String
+  DBSubnet1:
+    Type: AWS::EC2::Subnet::Id
+  DBSubnet2:
+    Type: AWS::EC2::Subnet::Id
+  VPC:
+    Type: AWS::EC2::VPC::Id
+  RDSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
 
 Resources:
 
@@ -29,8 +29,8 @@ Resources:
     Properties:
       DBSubnetGroupDescription: RDS subnet group
       SubnetIds:
-        - !Ref PrivateSubnet1
-        - !Ref PrivateSubnet2
+        - !Ref DBSubnet1
+        - !Ref DBSubnet2
 
   RDSInstance:
     Type: AWS::RDS::DBInstance
@@ -39,11 +39,11 @@ Resources:
       DBInstanceClass: db.t3.micro
       AllocatedStorage: 20
       Engine: mysql
-      DBName: mydatabase
+      DBName: shopalystdb
       MasterUsername: !Sub '{{resolve:secretsmanager:${DBSecret}::username}}'
       MasterUserPassword: !Sub '{{resolve:secretsmanager:${DBSecret}::password}}'
       VPCSecurityGroups:
-        - !Ref DBSecurityGroupId
+        - !Ref RDSSecurityGroup
       DBSubnetGroupName: !Ref DBSubnetGroup
       MultiAZ: true
       PubliclyAccessible: false
