@@ -3,7 +3,7 @@ Description: RDS MySQL Database with Secrets Manager for credentials
 
 Parameters:
   DBSubnet1:
-    Type: Strinh
+    Type: String
   DBSubnet2:
     Type: String
   VPC:
