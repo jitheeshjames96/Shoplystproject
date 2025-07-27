@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: RDS MySQL setup with private subnets and DB SG
+
+Parameters:
+  VPCID:
+    Type: String
+  PrivateSubnet1:
+    Type: String
+  PrivateSubnet2:
+    Type: String
+  DBSG:
+    Type: String
+
+Resources:
+  RDSInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: demo-db
+      AllocatedStorage: 20
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      EngineVersion: "8.0"
+      MasterUsername: admin
+      MasterUserPassword: Password123!
+      VPCSecurityGroups:
+        - !Ref DBSG
+      DBSubnetGroupName: !Ref RDSSubnetGroup
+      PubliclyAccessible: false
+      BackupRetentionPeriod: 0
+      MultiAZ: false
+      DeletionProtection: false
+
+  RDSSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: RDS subnet group
+      SubnetIds:
+        - !Ref PrivateSubnet1
+        - !Ref PrivateSubnet2
+      DBSubnetGroupName: demo-subnet-group
+
+Outputs:
+  RDSInstanceEndpoint:
+    Description: RDS Endpoint
+    Value: !GetAtt RDSInstance.Endpoint.Address
