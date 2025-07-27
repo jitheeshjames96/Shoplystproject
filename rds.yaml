@@ -21,7 +21,7 @@ Resources:
       SecretString: !Sub |
         {
           "username": "admin",
-          "password": "Admin123456!"
+          "password": "Shopalyst2025!"
         }
 
   DBSubnetGroup:
@@ -41,7 +41,7 @@ Resources:
       Engine: mysql
       DBName: shopalystdb
       MasterUsername: !Sub "{{resolve:secretsmanager:${DBSecretArn}::username}}"
-      MasterUserPassword: Admin123456!
+      MasterUserPassword: Shopalyst2025!
       VPCSecurityGroups:
         - !Ref DBSecurityGroup
       DBSubnetGroupName: !Ref DBSubnetGroup
