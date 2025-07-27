@@ -2,14 +2,14 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: RDS MySQL Database with Secrets Manager for credentials
 
 Parameters:
-  VpcId:
-    Type: AWS::EC2::VPC::Id
+  VPCID:
+    Type: String
   PrivateSubnet1:
-    Type: AWS::EC2::Subnet::Id
+    Type: String
   PrivateSubnet2:
-    Type: AWS::EC2::Subnet::Id
-  DBSecurityGroupId:
-    Type: AWS::EC2::SecurityGroup::Id
+    Type: String
+  DBSG:
+    Type: String
 
 Resources:
 
