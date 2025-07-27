@@ -3,13 +3,13 @@ Description: RDS MySQL Database with Secrets Manager for credentials
 
 Parameters:
   DBSubnet1:
-    Type: AWS::EC2::Subnet::Id
+    Type: Strinh
   DBSubnet2:
-    Type: AWS::EC2::Subnet::Id
+    Type: String
   VPC:
-    Type: AWS::EC2::VPC::Id
-  RDSSecurityGroup:
-    Type: AWS::EC2::SecurityGroup::Id
+    Type: String
+  DBSecurityGroup:
+    Type: String
 
 Resources:
 
@@ -43,7 +43,7 @@ Resources:
       MasterUsername: !Sub '{{resolve:secretsmanager:${DBSecret}::username}}'
       MasterUserPassword: !Sub '{{resolve:secretsmanager:${DBSecret}::password}}'
       VPCSecurityGroups:
-        - !Ref RDSSecurityGroup
+        - !Ref DBSecurityGroup
       DBSubnetGroupName: !Ref DBSubnetGroup
       MultiAZ: true
       PubliclyAccessible: false
