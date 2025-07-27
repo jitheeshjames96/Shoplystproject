@@ -10,7 +10,7 @@ Resources:
       EnableDnsSupport: true
       Tags:
         - Key: Name
-          Value: WebAppVPC
+          Value: ShopalystWebAppVPC
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -30,7 +30,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: PublicSubnet1
+          Value: ShopalystPublicSubnet1
 
   PublicSubnet2:
     Type: AWS::EC2::Subnet
@@ -41,7 +41,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: PublicSubnet2
+          Value: ShopalystPublicSubnet2
 
   PrivateSubnet1:
     Type: AWS::EC2::Subnet
@@ -51,7 +51,7 @@ Resources:
       AvailabilityZone: !Select [0, !GetAZs '']
       Tags:
         - Key: Name
-          Value: PrivateSubnet1
+          Value: ShopalystPrivateSubnet1
 
   PrivateSubnet2:
     Type: AWS::EC2::Subnet
@@ -61,7 +61,7 @@ Resources:
       AvailabilityZone: !Select [1, !GetAZs '']
       Tags:
         - Key: Name
-          Value: PrivateSubnet2
+          Value: ShopalystPrivateSubnet2
 
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
