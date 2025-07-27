@@ -1,45 +1,54 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: RDS MySQL setup with private subnets and DB SG
+Description: RDS MySQL Database with Secrets Manager for credentials
 
 Parameters:
-  VPCID:
-    Type: String
+  VpcId:
+    Type: AWS::EC2::VPC::Id
   PrivateSubnet1:
-    Type: String
+    Type: AWS::EC2::Subnet::Id
   PrivateSubnet2:
-    Type: String
-  DBSG:
-    Type: String
+    Type: AWS::EC2::Subnet::Id
+  DBSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
 
 Resources:
-  RDSInstance:
-    Type: AWS::RDS::DBInstance
-    Properties:
-      DBInstanceIdentifier: demo-db
-      AllocatedStorage: 20
-      DBInstanceClass: db.t3.micro
-      Engine: mysql
-      EngineVersion: "8.0"
-      MasterUsername: admin
-      MasterUserPassword: Password123!
-      VPCSecurityGroups:
-        - !Ref DBSG
-      DBSubnetGroupName: !Ref RDSSubnetGroup
-      PubliclyAccessible: false
-      BackupRetentionPeriod: 0
-      MultiAZ: false
-      DeletionProtection: false
 
-  RDSSubnetGroup:
+  DBSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: my-rds-secret
+      Description: RDS credentials for MySQL
+      SecretString: !Sub |
+        {
+          "username": "admin",
+          "password": "Admin@123456"
+        }
+
+  DBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
       DBSubnetGroupDescription: RDS subnet group
       SubnetIds:
         - !Ref PrivateSubnet1
         - !Ref PrivateSubnet2
-      DBSubnetGroupName: demo-subnet-group
+
+  RDSInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: my-db-instance
+      DBInstanceClass: db.t3.micro
+      AllocatedStorage: 20
+      Engine: mysql
+      DBName: mydatabase
+      MasterUsername: !Sub '{{resolve:secretsmanager:${DBSecret}::username}}'
+      MasterUserPassword: !Sub '{{resolve:secretsmanager:${DBSecret}::password}}'
+      VPCSecurityGroups:
+        - !Ref DBSecurityGroupId
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      MultiAZ: true
+      PubliclyAccessible: false
 
 Outputs:
-  RDSInstanceEndpoint:
-    Description: RDS Endpoint
+  DBEndpoint:
+    Description: RDS endpoint
     Value: !GetAtt RDSInstance.Endpoint.Address
