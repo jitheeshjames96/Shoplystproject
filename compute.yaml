@@ -55,7 +55,7 @@ Resources:
       LaunchTemplateName: WebAppTemplate
       LaunchTemplateData:
         ImageId: ami-0d0ad8bb301edb745  # Amazon Linux 2023 x86
-        InstanceType: t2.micro
+        InstanceType: t3.micro
         SecurityGroupIds:
           - !Ref WebSG
         KeyName: shoplyst-project-key
