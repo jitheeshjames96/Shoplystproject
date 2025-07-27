@@ -58,7 +58,7 @@ Resources:
         InstanceType: t2.micro
         SecurityGroupIds:
           - !Ref WebSG
-        KeyName: !Ref AWS::NoValue  # Optional key name
+        KeyName: shoplyst-project-key
         IamInstanceProfile:
           Name: !ImportValue EC2InstanceProfile
         UserData:
