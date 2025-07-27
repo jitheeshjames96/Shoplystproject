@@ -6,7 +6,7 @@ Parameters:
     Type: String
   DBSubnet2:
     Type: String
-  VPC:
+  VPCID:
     Type: String
   DBSecurityGroup:
     Type: String
