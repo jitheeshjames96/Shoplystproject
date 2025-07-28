@@ -33,7 +33,7 @@ Parameters:
     Type: String
   KeyName:
     Type: String
-  BootstrapScriptS3URL:
+  BootstrapS3Url:
     Type: String
 
 Resources:
