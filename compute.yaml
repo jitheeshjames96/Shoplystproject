@@ -68,6 +68,9 @@ Resources:
           Fn::Base64: |
             #!/bin/bash
             aws s3 cp s3://codebuildjitheesh/Project/scripts/user-data-script.sh /tmp/user-data-script.sh
+            curl -o /tmp/bootstrap.sh ${BootstrapScriptS3URL}
+            chmod +x /tmp/bootstrap.sh
+            bash /tmp/bootstrap.sh ${DBSecretArn} ${RdsEndpoint}"
             chmod +x /tmp/user-data-script.sh
             bash /tmp/user-data-script.sh
 
