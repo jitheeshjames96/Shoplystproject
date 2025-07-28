@@ -20,7 +20,7 @@ Components:
 
 VPC Stack: Custom VPC with 2 Public and 2 Private subnets, Internet Gateway, NAT Gateway, Route Tables
 
-Compute Stack: ALB, Launch Template, Auto Scaling Group, Target Group, EC2 Instance (Amazon Linux 2 with NGINX)
+Compute Stack: ALB, Launch Template, Auto Scaling Group, Target Group, EC2 Instance (Amazon Linux 2023 with NGINX)
 
 Database Stack: RDS (MySQL) with Multi-AZ, Secret Manager Integration
 
@@ -212,8 +212,6 @@ Architecture Diagram:
 
 
 Master Stack : Shopalyst 
-
-
 
 
 
