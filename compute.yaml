@@ -16,6 +16,8 @@ Parameters:
     Type: String
   WebSG:
     Type: String
+  KeyName:
+    Type: String
 
 Resources:
   ALB:
@@ -38,6 +40,7 @@ Resources:
       VpcId: !Ref VPCID
       TargetType: instance
       HealthCheckPath: /
+      HealthCheckEnabled: true
 
   Listener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -54,21 +57,19 @@ Resources:
     Properties:
       LaunchTemplateName: WebAppTemplate
       LaunchTemplateData:
-        ImageId: ami-0d0ad8bb301edb745  # Amazon Linux 2023 x86
+        ImageId: ami-0d0ad8bb301edb745
         InstanceType: t3.micro
         SecurityGroupIds:
           - !Ref WebSG
-        KeyName: shoplyst-project-key
+        KeyName: !Ref KeyName
         IamInstanceProfile:
           Name: !ImportValue EC2InstanceProfile
         UserData:
           Fn::Base64: |
             #!/bin/bash
-            yum update -y
-            amazon-linux-extras install nginx1 -y
-            systemctl start nginx
-            systemctl enable nginx
-            echo "<h1>Deployed via CloudFormation</h1>" > /usr/share/nginx/html/index.html
+            aws s3 cp s3://codebuildjitheesh/Project/scripts/user-data-script.sh /tmp/user-data-script.sh
+            chmod +x /tmp/user-data-script.sh
+            bash /tmp/user-data-script.sh
 
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -79,11 +80,80 @@ Resources:
       LaunchTemplate:
         LaunchTemplateId: !Ref LaunchTemplate
         Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      
       MinSize: '1'
       MaxSize: '2'
       DesiredCapacity: '1'
+      HealthCheckType: ELB
+      HealthCheckGracePeriod: 300
       TargetGroupARNs:
         - !Ref TargetGroup
+  
+  NotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: ShopalystNotification
+
+  NotificationTopicSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: email
+      Endpoint: jitheeshjames27@gmail.com
+      TopicArn: !Ref NotificationTopic
+
+  ScaleOutPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AutoScalingGroupName: !Ref AutoScalingGroup
+      PolicyType: SimpleScaling
+      AdjustmentType: ChangeInCapacity
+      ScalingAdjustment: 1
+      Cooldown: 300
+
+  ScaleInPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AutoScalingGroupName: !Ref AutoScalingGroup
+      PolicyType: SimpleScaling
+      AdjustmentType: ChangeInCapacity
+      ScalingAdjustment: -1
+      Cooldown: 300
+
+  HighCPUAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: "Alarm if CPU > 70% for 5 minutes"
+      Namespace: AWS/EC2
+      MetricName: CPUUtilization
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value: !Ref AutoScalingGroup
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 70
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref ScaleOutPolicy
+        - !Ref NotificationTopic
+
+  LowCPUAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: "Alarm if CPU < 30% for 5 minutes"
+      Namespace: AWS/EC2
+      MetricName: CPUUtilization
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value: !Ref AutoScalingGroup
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 30
+      ComparisonOperator: LessThanThreshold
+      AlarmActions:
+        - !Ref ScaleInPolicy
+        - !Ref NotificationTopic
 
 Outputs:
   ALBDNSName:

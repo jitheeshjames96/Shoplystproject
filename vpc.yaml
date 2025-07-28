@@ -1,6 +1,18 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: VPC with 2 public and 2 private subnets, IGW, NAT Gateway, and route tables
 
+Parameters:
+  VpcCIDR:
+    Type: String
+  PublicSubnet1CIDR:
+    Type: String
+  PublicSubnet2CIDR:
+    Type: String
+  PrivateSubnet1CIDR:
+    Type: String
+  PrivateSubnet2CIDR:
+    Type: String
+
 Resources:
   MyVPC:
     Type: AWS::EC2::VPC
