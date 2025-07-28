@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shopalyst Demo WebApp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to right, #f2f2f2, #e6e9f0);
+      color: #333;
+    }
+    header {
+      background-color: #004b93;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+    section {
+      padding: 3rem;
+      text-align: center;
+    }
+    .card {
+      background-color: white;
+      margin: 2rem auto;
+      padding: 2rem;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+    footer {
+      background-color: #004b93;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+    a.button {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 12px 24px;
+      color: white;
+      background-color: #00a8e8;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+    a.button:hover {
+      background-color: #007bbd;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome to Shopalyst Demo WebApp</h1>
+  </header>
+
+  <section>
+    <div class="card">
+      <h2>You've successfully deployed a web app using AWS CloudFormation!</h2>
+      <p>This is a demo landing page hosted on NGINX inside an EC2 instance in a private subnet.</p>
+      <a href="https://github.com/jitheeshjames96/Shoplystproject" class="button">Learn More</a>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 Shopalyst Cloud Demo. All rights reserved.
+  </footer>
+</body>
+</html>
