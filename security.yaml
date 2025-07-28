@@ -76,6 +76,15 @@ Resources:
               Action:
                 - s3:GetObject
               Resource: "arn:aws:s3:::codebuildjitheesh/*"
+      - PolicyName: EC2RDSSecretAccess
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+                - rds:DescribeDBInstances
+              Resource: '*'
       RoleName: EC2InstanceSSMRole
 
   InstanceProfile:
