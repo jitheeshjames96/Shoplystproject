@@ -18,6 +18,12 @@ Parameters:
     Type: String
   KeyName:
     Type: String
+  DBSecretArn:
+    Type: String
+  RdsEndpoint:
+    Type: String
+  BootstrapScriptS3URL:
+    Type: String
 
 Resources:
   ALB:
