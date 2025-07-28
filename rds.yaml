@@ -22,10 +22,15 @@ Resources:
     Properties:
       Name: my-rds-secret
       Description: RDS credentials for MySQL
-      SecretString: !Sub |
+      SecretString: !Sub
+      - |
         {
-          "username": !Ref DBUsername
-          "password": !Ref DBPassword
+          "username": "${Username}",
+          "password": "${Password}"
+        }
+      - {
+          Username: !Ref DBUsername,
+          Password: !Ref DBPassword
         }
 
   DBSubnetGroup:
