@@ -14,6 +14,9 @@ Parameters:
   RdsTemplateUrl:
     Type: String
     Description: S3 URL for rds.yaml
+  BootstrapTemplateUrl:
+    Type: String
+    Description: S3 URL for bootstrap.yaml
   VpcCIDR:
     Type: String
   PublicSubnet1CIDR:
@@ -29,6 +32,8 @@ Parameters:
   DBPassword:
     Type: String
   KeyName:
+    Type: String
+  BootstrapScriptS3URL:
     Type: String
 
 Resources:
@@ -74,4 +79,14 @@ Resources:
         DBSubnet1: !GetAtt VPCStack.Outputs.PrivateSubnet1
         DBSubnet2: !GetAtt VPCStack.Outputs.PrivateSubnet2
         DBSecurityGroup: !GetAtt SecurityStack.Outputs.DBSecurityGroup
-        
+
+  BootstrapStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:!Ref BootstrapTemplateUrl
+      Parameters:
+        WebAppInstanceId: !GetAtt ComputeStack.outputs.WebAppInstanceId
+        WebAppInstanceProfileName: !GetAtt ComputeStack.Outputs.WebAppInstanceProfileName
+        DBSecretArn: !GetAtt RDSStack.Outputs.DBSecretArn
+        RdsEndpoint: !GetAtt RDSStack.Outputs.RdsEndpoint
+        BootstrapScriptS3URL: !Ref BootstrapScriptS3URL
