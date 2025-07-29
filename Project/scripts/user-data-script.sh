@@ -10,10 +10,10 @@ systemctl status nginx > /var/log/nginx-status.log
 
 systemctl restart nginx
 
-: <<'IGNORE'
+
 # Update and install required tools
 dnf update -y
-dnf install -y mysql jq aws-cli
+sudo dnf install -y mariadb105
 
 # Input Parameters
 SECRET_ARN=$1
@@ -39,4 +39,3 @@ INSERT INTO products (name, price, category) VALUES
   ('Samsung Galaxy S24', 749.00, 'Electronics'),
   ('MacBook Air M3', 1299.50, 'Computers');
 EOF
-IGNORE
