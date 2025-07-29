@@ -1,139 +1,80 @@
-🚀 Shopalyst WebApp Infrastructure (AWS CloudFormation)
+# Shoplystproject
 
-This project automates the deployment of a scalable, secure web application infrastructure on AWS using CloudFormation (IaC). It includes:
+🏗️ Local Project Structure
 
-VPC with public/private subnets across two AZs
-
-Auto Scaling EC2 web servers (private)
-
-Internet-facing ALB (public)
-
-Secure Multi-AZ RDS (MySQL)
-
-Secrets Manager for DB credentials
-
-CloudWatch alarms and notifications
-
-GitHub-triggered CI/CD using CodePipeline (optional)  not integrated yet
-
-
-
----
-
-🧱 Architecture Overview
-
-🔹 Key Components:
-
-Stack	Description
-
-VPC	Custom VPC, 2 AZs, NAT Gateways, IGW
-Compute	EC2 in ASG (Nginx), ALB with health checks
-Database	RDS MySQL (multi-AZ, private, SecretsManager)
-Bootstrap	One-time EC2 to initialize schema/data
-IAM	Roles for EC2 with minimal privileges.....
+├── master.yaml
+├── vpc.yaml
+├── security.yaml
+├── compute.yaml
+├── rds.yaml
+└── README.md
+└── config/
+        └── env.json
+└── Documents/
+        └── Shopalyst WebApp Doc
+└── scripts
+        └── index.html
+        └── bootstrap.sh
+        └── user-data-script.sh
 
 
-CI/CD	GitHub → CodePipeline → CloudFormation -- not yet
-
-All services built up from master stack which will be nested to 4 core nested stacks.
-Module level operation is maintained for ease of debug and implementation.
-
-All services are comes under free tier and architected using aws free tier account.
-Infrastructure will be deleted on deletion of master stack and there is no retention policy enabled on any services.
 
 ---
 
-🧑‍💻 Setup Instructions
 
-1. Clone the Repo
+## Overview
+This repository provides a modular, nested‑stack CloudFormation setup to deploy:
+- Custom VPC with public/private subnets
+- ALB + Auto Scaling EC2 instances running Nginx
+- Private RDS (MySQL) database
+
+## Deployment Steps
+
+### 1. Initialize GitHub Repository
+```bash
+git init
+git add .
+git commit -m "Shopalyst project"
+git branch -M Prod
+git remote add origin https://github.com/jitheeshjames96/Shoplystproject.git
+git push -u origin Prod
+
+
+### 2. Upload To S3
+
+Open cloudshell:
 
 git clone https://github.com/jitheeshjames96/Shoplystproject.git
 
-Just ensure it is Prod branch or else please switch to Prod branch
-
-Then
+ensure it is Prod Branch
 
 cd Shoplystproject
 
-upload the Project folder to your s3 bucket
+Move Project Folder completely to your s3 bucket
 
-2. Prepare Keypair and env config file with s3 paths as per your bucket name and change the other parameters as per your convinience
-
-Create a key pair and attached it with ec2 machine, but not enabling the ssh open in sg(security constraint).
-
-If you want to use ssh enable the inbound of WebAppSG for port 22 to the desired destination range
-
-Change that keyname as per your key in env.json file
-In case of ssm failure, an alternative to access the machine.
-
-env file is created with parameters which is passed to master stack,
-so that no values will be hard coded in template.
+aws s3 sync /home/cloudshell-user/Shoplystproject/Project/ s3://your-bucket-name/Project/
 
 
-3. Deploy via CloudFormation (Optional CLI)
+### 3. Update env.json file (optional) or it can be manually enter via parameters while deploying stack via console
 
-aws cloudformation deploy \
-  --stack-name shopalyst-master-stack \
-  --template-url <s3 path for master yaml in your account> \
-  --parameter-overrides file://env.json \
+Replace each parameter values: with the correct data
+
+
+### 4. Deploy Master Stack via Console
+
+Go to AWS CloudFormation → Create stack → Upload https://your-bucket-name.s3.ap-south-1.amazonaws.com/Project/master.yaml ) → Create stack
+
+Or via AWS CLI: Then update each template url with correct values for each nested stack
+
+
+aws cloudformation create-stack \
+  --stack-name ShopalystProject \
+  --template-url https://codebuildjitheesh.s3.ap-south-1.amazonaws.com/Project/master.yaml \
+  --parameters file://Project/config/env.json \
   --capabilities CAPABILITY_NAMED_IAM
 
-4. CI/CD (Auto Deployment) not yet done now doing via above mode 
+Review the stack progress and completion. Verify the output from compute Stack and hit on the ELB DNS NAME to see the webpage.
 
-Commits to GitHub trigger CodePipeline → CloudFormation
+### 5. Cleanup
 
-buildspec.yml handles the deploy
-
-
-
----
-
-🌐 Web Application
-
-Static webpage served on EC2 (via Nginx)
-
-index.html enhanced to include GitHub project link
-
-
----
-
-📬 Notifications
-
-Email alerts configured via SNS for ASG instance launch/termination
-
-CloudWatch used for CPU-based scaling policy
-
-
----
-
-📈 Monitoring & Scaling
-
-Target group health check + ALB
-
-ASG with CPU-based scaling:
-
-Scale out > 70%
-
-Scale in < 30%
-
-
----
-
-📎 Notes
-
-RDS and EC2 are in private subnets
-
-All credentials are securely handled via Secrets Manager
-
-IAM follows least privilege principles
-
-
----
-
-
-## 📄 References
-- AWS CloudFormation Documentation: https://docs.aws.amazon.com/cloudformation/
-- AWS Secrets Manager: https://docs.aws.amazon.com/secretsmanager/
-- Project documents creation and technical guidance using OpenAI ChatGPT
-
-
+Delete the shopalyst-stack deletes all nested resources automatically.
