@@ -75,12 +75,12 @@ Resources:
         UserData:
           Fn::Base64: |
             #!/bin/bash
-            curl -o /tmp/user-data-script.sh "${WebBootstrap}"
-            curl -o /tmp/bootstrap.sh "${DBBootstrap}"
+            aws s3 cp s3://codebuildjitheesh/Project/scripts/user-data-script.sh /tmp/user-data-script.sh
+            aws s3 cp s3://codebuildjitheesh/Project/scripts/bootstrap.sh /tmp/bootstrap.sh
             chmod +x /tmp/user-data-script.sh
-            bash /tmp/user-data-script.sh
             chmod +x /tmp/bootstrap.sh
-            bash /tmp/bootstrap.sh ${DBSecretArn} ${DBEndpoint}"
+            bash /tmp/user-data-script.sh
+            bash /tmp/bootstrap.sh ${DBSecretArn} ${DBEndpoint}
 
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup

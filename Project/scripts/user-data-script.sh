@@ -10,6 +10,7 @@ systemctl status nginx > /var/log/nginx-status.log
 
 systemctl restart nginx
 
+: <<'COMMENT'
 # Update and install required tools for AL2023
  echo "Started DB script" > /tmp/rds-bootstrap-status.txt
  dnf update -y && echo "Update triggered" >> /tmp/rds-bootstrap-status.txt 
@@ -30,5 +31,6 @@ systemctl restart nginx
 
  # Create schema and data
  mysql -h "$DBEndpoint" -u"$DBUSER" -p"$DBPASS"
+'COMMENT'
 
 
