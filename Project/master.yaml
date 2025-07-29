@@ -79,7 +79,7 @@ Resources:
         PrivateSubnet2: !GetAtt VPCStack.Outputs.PrivateSubnet2
         ALBSG: !GetAtt SecurityStack.Outputs.ALBSecurityGroup
         WebSG: !GetAtt SecurityStack.Outputs.WebSecurityGroup
-        DBSecretArn: !GetAttGetAtt RDSStack.Outputs.DBSecretArn
+        DBSecretArn: !GetAtt RDSStack.Outputs.DBSecretArn
         DBEndpoint: !GetAtt RDSStack.Outputs.DBEndpoint
         DBBootstrap: !Ref DBBootstrap
         WebBootstrap: !Ref WebBootstrap
