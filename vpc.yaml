@@ -17,7 +17,7 @@ Resources:
   MyVPC:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: 10.0.0.0/16
+      CidrBlock: !Ref VpcCIDR
       EnableDnsHostnames: true
       EnableDnsSupport: true
       Tags:
@@ -37,7 +37,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref MyVPC
-      CidrBlock: 10.0.1.0/24
+      CidrBlock: !Ref PublicSubnet1CIDR
       AvailabilityZone: !Select [0, !GetAZs '']
       MapPublicIpOnLaunch: true
       Tags:
@@ -48,7 +48,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref MyVPC
-      CidrBlock: 10.0.2.0/24
+      CidrBlock: !Ref PublicSubnet2CIDR
       AvailabilityZone: !Select [1, !GetAZs '']
       MapPublicIpOnLaunch: true
       Tags:
@@ -59,7 +59,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref MyVPC
-      CidrBlock: 10.0.3.0/24
+      CidrBlock: !Ref PrivateSubnet1CIDR
       AvailabilityZone: !Select [0, !GetAZs '']
       Tags:
         - Key: Name
@@ -69,7 +69,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref MyVPC
-      CidrBlock: 10.0.4.0/24
+      CidrBlock: !Ref PrivateSubnet1CIDR
       AvailabilityZone: !Select [1, !GetAZs '']
       Tags:
         - Key: Name
