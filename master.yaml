@@ -30,8 +30,6 @@ Parameters:
     Type: String
   KeyName:
     Type: String
-  BootstrapScriptS3URL:
-    Type: String
 
 Resources:
   VPCStack:
@@ -77,7 +75,4 @@ Resources:
         PrivateSubnet2: !GetAtt VPCStack.Outputs.PrivateSubnet2
         ALBSG: !GetAtt SecurityStack.Outputs.ALBSecurityGroup
         WebSG: !GetAtt SecurityStack.Outputs.WebSecurityGroup
-        DBSecretArn: !GetAtt RDSStack.Outputs.DBSecretArn
-        RdsEndpoint: !GetAtt RDSStack.Outputs.RdsEndpoint
-        BootstrapScriptS3URL: !Ref BootstrapScriptS3URL
         
