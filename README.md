@@ -58,7 +58,11 @@ upload the Project folder to your s3 bucket
 
 2. Prepare Keypair and env config file with s3 paths as per your bucket name and change the other parameters as per your convinience
 
-Create a key pair and attached it with ec2 machine, but not enabling the ssh open in sg. Change that keyname as per tour key in env. json file
+Create a key pair and attached it with ec2 machine, but not enabling the ssh open in sg(security constraint).
+
+If you want to use ssh enable the inbound of WebAppSG for port 22 to the desired destination range
+
+Change that keyname as per your key in env.json file
 In case of ssm failure, an alternative to access the machine.
 
 env file is created with parameters which is passed to master stack,
