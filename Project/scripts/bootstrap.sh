@@ -9,6 +9,9 @@ sudo dnf install -y mariadb105 && echo "Mysql Installed" >> /tmp/rds-bootstrap-s
 DBSecretARN=$1
 DBEndpoint=$2
 
+echo "Secret Arn : $DBSecretARN" > /tmp/rds-bootstrap-status.txt
+echo "DBEndpoint : $DBEndpoint" > /tmp/rds-bootstrap-status.txt
+
 # Fetch secret values from AWS Secrets Manager
 SECRET_JSON=$(aws secretsmanager get-secret-value --secret-id "$DBSecretARN" --query SecretString --output text)
 DBUSER=$(echo "$SECRET_JSON" | jq -r .username) 
