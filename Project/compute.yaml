@@ -22,6 +22,10 @@ Parameters:
     Type: String
   DBEndpoint:
     Type: String
+  DBBootstrap:
+    Type: String
+  WebBootstrap:
+    Type: String
 
 Resources:
   ALB:
@@ -71,8 +75,8 @@ Resources:
         UserData:
           Fn::Base64: |
             #!/bin/bash
-            aws s3 cp s3://codebuildjitheesh/Project/scripts/user-data-script.sh /tmp/user-data-script.sh
-            aws s3 cp s3://codebuildjitheesh/Project/scripts/bootstrap.sh /tmp/bootstrap.sh
+            curl -o /tmp/user-data-script.sh "${WebBootstrap}"
+            curl -o /tmp/bootstrap.sh "${DBBootstrap}"
             chmod +x /tmp/user-data-script.sh
             bash /tmp/user-data-script.sh
             chmod +x /tmp/bootstrap.sh
