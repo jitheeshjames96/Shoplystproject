@@ -67,7 +67,7 @@ so that no values will be hard coded in template.
 
 aws cloudformation deploy \
   --stack-name shopalyst-master-stack \
-  --template-file master.yaml \
+  --template-file <s3 url for master.yaml in your account> \
   --parameter-overrides file://env.json \
   --capabilities CAPABILITY_NAMED_IAM
 
