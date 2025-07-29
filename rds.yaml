@@ -10,6 +10,10 @@ Parameters:
     Type: String
   DBSecurityGroup:
     Type: String
+  DBUsername:
+    Type: String
+  DBPassword:
+    Type: String
 
 Resources:
 
@@ -20,10 +24,9 @@ Resources:
       Description: RDS credentials for MySQL
       SecretString: !Sub |
         {
-          "username": "admin",
-          "password": "ShaLyst2025"
+          "username": !Ref DBUsername
+          "password": !Ref DBPassword
         }
-
   DBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
@@ -52,3 +55,8 @@ Outputs:
   DBEndpoint:
     Description: RDS endpoint
     Value: !GetAtt RDSInstance.Endpoint.Address
+  DBSecretArn:
+    Description: "ARN of the RDS Secret in Secrets Manager"
+    Value: !Ref DBSecret
+    Export:
+      Name: !Sub "${AWS::StackName}-DBSecretArn"
