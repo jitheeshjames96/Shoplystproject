@@ -80,3 +80,27 @@ Review the stack progress and completion. Verify the output from compute Stack a
 ### 5. Cleanup
 
 Delete the shopalyst-stack deletes all nested resources automatically.
+
+
+
+###Documentation:
+
+
+Please refer this doc : https://github.com/jitheeshjames96/Shoplystproject/blob/Prod/Project/Documents/Shopalyst%20Demo%20Webapp.pdf
+
+##References and courtesy :
+
+* ChatGPT,
+
+* OpenAI,
+
+* AWS Documetation for cloudformation
+
+   ** CloudFormation User Guide
+
+   **Auto Scaling with ALB
+
+   **Secret Manager Integration
+
+
+* Forums, GitHub Repos, and AWS Blog Posts
