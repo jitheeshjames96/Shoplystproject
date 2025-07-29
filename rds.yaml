@@ -64,6 +64,5 @@ Outputs:
   DBSecretArn:
     Description: "ARN of the RDS Secret in Secrets Manager"
     Value: !Ref DBSecret
-    Export:
-      Name: !Sub "${AWS::StackName}-DBSecretArn"
+    
   
