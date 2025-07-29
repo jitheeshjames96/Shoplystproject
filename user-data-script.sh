@@ -10,8 +10,8 @@ systemctl status nginx > /var/log/nginx-status.log
 
 systemctl restart nginx
 
-
-# Update and install required tools for AL2023
+: <<'IGNORE'
+# Update and install required tools
 dnf update -y
 dnf install -y mysql jq aws-cli
 
@@ -39,3 +39,4 @@ INSERT INTO products (name, price, category) VALUES
   ('Samsung Galaxy S24', 749.00, 'Electronics'),
   ('MacBook Air M3', 1299.50, 'Computers');
 EOF
+IGNORE
