@@ -73,6 +73,8 @@ Resources:
         PublicSubnet2: !GetAtt VPCStack.Outputs.PublicSubnet2
         PrivateSubnet1: !GetAtt VPCStack.Outputs.PrivateSubnet1
         PrivateSubnet2: !GetAtt VPCStack.Outputs.PrivateSubnet2
-        ALBSG: !GetAtt SecurityStack.Outputs.ALBSecurityGroup
+        ALBSG: !GetAttGetAtt SecurityStack.Outputs.ALBSecurityGroup
         WebSG: !GetAtt SecurityStack.Outputs.WebSecurityGroup
+        DBSecretArn: !GetAttGetAtt RDSStack.Outputs.DBSecretArn
+        DBEndpoint: !GetAtt RDSStack.Outputs.DBEndpoint
         
