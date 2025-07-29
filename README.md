@@ -50,6 +50,9 @@ Infrastructure will be deleted on deletion of master stack and there is no reten
 git clone https://github.com/jitheeshjames96/Shoplystproject.git
 
 Just ensure it is Prod branch or else please switch to Prod branch
+
+Then
+
 cd Shoplystproject
 
 upload the Project folder to your s3 bucket
