@@ -49,8 +49,8 @@ Resources:
       AllocatedStorage: 20
       Engine: mysql
       DBName: shopalystdb
-      MasterUsername: !Ref DBUsername
-      MasterUserPassword: !Ref DBPassword
+      MasterUsername: !Sub '{{resolve:secretsmanager:${DBSecret}:SecretString:username}}'
+      MasterUserPassword: !Sub '{{resolve:secretsmanager:${DBSecret}:SecretString:password}}'
       VPCSecurityGroups:
         - !Ref DBSecurityGroup
       DBSubnetGroupName: !Ref DBSubnetGroup
