@@ -3,18 +3,30 @@
 🏗️ Local Project Structure
 
 ├── master.yaml
+
 ├── vpc.yaml
+
 ├── security.yaml
+
 ├── compute.yaml
+
 ├── rds.yaml
+
 └── README.md
+
 └── config/
+
         └── env.json
+        
 └── Documents/
+
         └── Shopalyst WebApp Doc
 └── scripts
+
         └── index.html
+        
         └── bootstrap.sh
+        
         └── user-data-script.sh
 
 
