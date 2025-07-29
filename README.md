@@ -50,6 +50,8 @@ Infrastructure will be deleted on deletion of master stack and there is no reten
 1. Clone the Repo
 
 git clone https://github.com/jitheeshjames96/Shoplystproject.git
+
+
 cd Shoplystproject
 
 upload the Project folder to your s3 bucket
