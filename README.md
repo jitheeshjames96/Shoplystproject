@@ -52,12 +52,14 @@ Infrastructure will be deleted on deletion of master stack and there is no reten
 git clone https://github.com/jitheeshjames96/Shoplystproject.git
 cd Shoplystproject
 
-2. Prepare Keypair and env config file
+upload the Project folder to your s3 bucket
 
-Create a key pair and i am. attaching it with ec2 machine but not enabling the ssh open in sg.
+2. Prepare Keypair and env config file with s3 paths as per your bucket name and change the other parameters as per your convinience
+
+Create a key pair and attached it with ec2 machine, but not enabling the ssh open in sg. Change that keyname as per tour key in env. json file
 In case of ssm failure, an alternative to access the machine.
 
-env file is created with parameters passed to cloudflormation,
+env file is created with parameters which is passed to master stack,
 so that no values will be hard coded in template.
 
 
