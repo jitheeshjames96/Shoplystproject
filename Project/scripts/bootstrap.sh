@@ -2,7 +2,7 @@
 
 # Update and install required tools for AL2023
 dnf update -y
-dnf install -y mysql jq aws-cli
+sudo dnf install -y mariadb105
 
 # Input Parameters
 SECRET_ARN=$1
