@@ -30,6 +30,10 @@ Parameters:
     Type: String
   KeyName:
     Type: String
+  DBBootstrap:
+    Type: String
+  WebBootstrap:
+    Type: String
 
 Resources:
   VPCStack:
@@ -77,4 +81,4 @@ Resources:
         WebSG: !GetAtt SecurityStack.Outputs.WebSecurityGroup
         DBSecretArn: !GetAttGetAtt RDSStack.Outputs.DBSecretArn
         DBEndpoint: !GetAtt RDSStack.Outputs.DBEndpoint
-        
+        D
