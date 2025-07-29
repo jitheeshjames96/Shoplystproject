@@ -37,7 +37,11 @@ IAM	Roles for EC2 with minimal privileges.....
 
 CI/CD	GitHub → CodePipeline → CloudFormation -- not yet
 
+All services built up from master stack which will be nested to 4 core nested stacks.
+Module level operation is maintained for ease of debug and implementation.
 
+All seevices are comes under free tier and architected using aws free tier account.
+Infrastructure will be deleted on deletion of master stack and there is no retention policy enabled on any services.
 
 ---
 
