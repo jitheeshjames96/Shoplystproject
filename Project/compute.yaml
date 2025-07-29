@@ -73,10 +73,10 @@ Resources:
             #!/bin/bash
             aws s3 cp s3://codebuildjitheesh/Project/scripts/user-data-script.sh /tmp/user-data-script.sh
             aws s3 cp s3://codebuildjitheesh/Project/scripts/bootstrap.sh /tmp/bootstrap.sh
-            chmod +x /tmp/bootstrap.sh
-            bash /tmp/bootstrap.sh ${DBSecretArn} ${DBEndpoint}"
             chmod +x /tmp/user-data-script.sh
             bash /tmp/user-data-script.sh
+            chmod +x /tmp/bootstrap.sh
+            bash /tmp/bootstrap.sh ${DBSecretArn} ${DBEndpoint}"
 
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
