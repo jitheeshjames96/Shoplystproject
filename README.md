@@ -42,22 +42,24 @@ git push -u origin Prod
 
 ### 2. Upload To S3
 
-Open cloudshell:
+#Open cloudshell:
 
 git clone https://github.com/jitheeshjames96/Shoplystproject.git
 
-ensure it is Prod Branch
+#ensure it is Prod Branch
 
 cd Shoplystproject
 
-Move Project Folder completely to your s3 bucket
+### Update the compute.yaml file s3 location scripts in userdata with your location, then copy to s3
+
+#Move Project Folder completely to your s3 bucket
 
 aws s3 sync /home/cloudshell-user/Shoplystproject/Project/ s3://your-bucket-name/Project/
 
 
 ### 3. Update env.json file (optional) or it can be manually enter via parameters while deploying stack via console
 
-Replace each parameter values: with the correct data
+#Replace each parameter values: with the correct data
 
 
 ### 4. Deploy Master Stack via Console
