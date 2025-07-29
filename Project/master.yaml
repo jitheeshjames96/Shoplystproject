@@ -81,4 +81,5 @@ Resources:
         WebSG: !GetAtt SecurityStack.Outputs.WebSecurityGroup
         DBSecretArn: !GetAttGetAtt RDSStack.Outputs.DBSecretArn
         DBEndpoint: !GetAtt RDSStack.Outputs.DBEndpoint
-        D
+        DBBootstrap: !Ref DBBootstrap
+        WebBootstrap: !Ref WebBootstrap
