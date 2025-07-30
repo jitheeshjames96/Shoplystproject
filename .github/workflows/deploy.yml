@@ -33,11 +33,8 @@ jobs:
         DATE=$(date +%Y-%m-%d-%H%M)
         BUCKET="codebuildjitheesh"
         BACKUP_PREFIX="Project_bkp_$DATE"
-        
-        # Copy Project folder to backup
+
         aws s3 cp s3://$BUCKET/Project/ s3://$BUCKET/$BACKUP_PREFIX/ --recursive
-        
-        # Remove old Project folder (optional, if you want a clean push)
         aws s3 rm s3://$BUCKET/Project/ --recursive
 
     - name: Upload new Project folder to S3
@@ -46,8 +43,50 @@ jobs:
 
     - name: Deploy CloudFormation Stack
       run: |
+        STACK_NAME=${{ github.event.inputs.stack }}-${{ github.event.inputs.environment }}
+
+        echo "⏳ Deploying CloudFormation stack: $STACK_NAME"
         aws cloudformation deploy \
           --template-file Project/master.yaml \
-          --stack-name ${{ github.event.inputs.stack }}-${{ github.event.inputs.environment }} \
+          --stack-name $STACK_NAME \
           --parameter-overrides file://Project/config/env.json \
           --capabilities CAPABILITY_NAMED_IAM
+
+    - name: Monitor CloudFormation Events
+      run: |
+        STACK_NAME=${{ github.event.inputs.stack }}-${{ github.event.inputs.environment }}
+
+        echo "📡 Monitoring stack events for: $STACK_NAME"
+        COMPLETE=0
+        while [ $COMPLETE -eq 0 ]; do
+          aws cloudformation describe-stack-events \
+            --stack-name $STACK_NAME \
+            --max-items 5 \
+            --query 'StackEvents[?ResourceStatus!=`DELETE_COMPLETE`].[Timestamp, LogicalResourceId, ResourceType, ResourceStatus, ResourceStatusReason]' \
+            --output table
+
+          STATUS=$(aws cloudformation describe-stacks \
+            --stack-name $STACK_NAME \
+            --query "Stacks[0].StackStatus" \
+            --output text)
+
+          echo "🔄 Current Stack Status: $STATUS"
+
+          case "$STATUS" in
+            *IN_PROGRESS)
+              sleep 15
+              ;;
+            *ROLLBACK*|*FAILED*)
+              echo "❌ Deployment failed with status: $STATUS"
+              exit 1
+              ;;
+            *COMPLETE)
+              echo "✅ Deployment finished with status: $STATUS"
+              COMPLETE=1
+              ;;
+            *)
+              echo "⚠️ Unknown status: $STATUS"
+              exit 1
+              ;;
+          esac
+        done
