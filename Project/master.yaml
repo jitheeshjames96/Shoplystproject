@@ -34,6 +34,8 @@ Parameters:
     Type: String
   WebBootstrap:
     Type: String
+  Email:
+    Type: String
 
 Resources:
   VPCStack:
@@ -83,3 +85,4 @@ Resources:
         DBEndpoint: !GetAtt RDSStack.Outputs.DBEndpoint
         DBBootstrap: !Ref DBBootstrap
         WebBootstrap: !Ref WebBootstrap
+        Email: !Ref Email
