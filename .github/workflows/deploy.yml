@@ -1,7 +1,7 @@
 name: Deploy CloudFormation Stack
 
 on:
-  workflow_dispatch:  # Allows manual triggering
+  workflow_dispatch:
     inputs:
       stack:
         description: "Stack name"
@@ -27,6 +27,22 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-south-1
+
+    - name: Backup existing Project/ in S3
+      run: |
+        DATE=$(date +%Y-%m-%d-%H%M)
+        BUCKET="codebuildjitheesh"
+        BACKUP_PREFIX="Project_bkp_$DATE"
+        
+        # Copy Project folder to backup
+        aws s3 cp s3://$BUCKET/Project/ s3://$BUCKET/$BACKUP_PREFIX/ --recursive
+        
+        # Remove old Project folder (optional, if you want a clean push)
+        aws s3 rm s3://$BUCKET/Project/ --recursive
+
+    - name: Upload new Project folder to S3
+      run: |
+        aws s3 cp Project/ s3://codebuildjitheesh/Project/ --recursive
 
     - name: Deploy CloudFormation Stack
       run: |
