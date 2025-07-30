@@ -42,6 +42,8 @@ S3 bucket to store templates (e.g., my-cfn-bucket)
 
 Secrets Manager pre-provisioned (if not created via template)
 
+Create a key pair for login to webapp if any issue happens with ssm.
+
 
 
 ---
@@ -49,7 +51,8 @@ Secrets Manager pre-provisioned (if not created via template)
 2. 🧩 Upload Code to S3
 
 aws s3 cp Project/ s3://my-cfn-bucket/Project/ --recursive
-
+update the compute.yaml userdata section with your s3 url
+And update parameter values in env.json file inside config folder.
 
 ---
 
@@ -77,7 +80,6 @@ Resource	Description
 
 ALB DNS	Public endpoint of your application
 RDS Endpoint	Internal DB access endpoint
-Bastion Host (if any)	For admin access (optional)
 
 
 
@@ -99,9 +101,19 @@ rds.yaml references the ARN dynamically and passes it to RDS
 
 [ ] Add optional Bastion setup for database debugging
 
-[ ] CI/CD pipeline integration (e.g., CodePipeline)
+[ ] CI/CD pipeline integration (e.g., CodePipeline, Git Actions)
 
 
+---
+
+## ✅ Best Practices Followed
+
+- Modular CloudFormation templates
+- Private subnets for compute and database
+- NAT Gateway for secure outbound traffic
+- IAM role with minimal permissions for EC2
+- Secrets stored in AWS Secrets Manager
+- Auto Scaling + ALB setup for HA
 
 ---
 
