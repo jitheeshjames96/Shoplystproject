@@ -1,3 +1,24 @@
+🏗️ Shoplyst AWS Infrastructure Deployment – CloudFormation Based
+
+This project deploys a **secure, scalable, and modular AWS infrastructure** for a web application using AWS CloudFormation and S3. The deployment follows Infrastructure as Code (IaC) principles and aligns with AWS best practices.
+
+---
+
+## 📌 Key Features
+
+- **Custom VPC** across 2 Availability Zones (high availability)
+- Public and private subnets with correct routing (NAT & IGW)
+- **Auto Scaling Group** of EC2 web servers behind an **Application Load Balancer**
+- **Private RDS (MySQL)** with Multi-AZ setup and Secrets Manager integration
+- Security Groups with least privilege
+- Modular stack split by function (`vpc.yaml`, `compute.yaml`, `rds.yaml`, `security.yaml`, etc.)
+- Parameterized deployment using `parameters.json`
+
+---
+
+## 📁 Folder Structure
+
+```bash
 Shoplystproject/
 ├── Project/
 │   ├── config/                  # Nested stack YAML references
