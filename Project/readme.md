@@ -29,10 +29,7 @@ Shoplystproject/
 │   ├── rds.yaml                 # RDS DB + Secrets Manager reference
 │   ├── security.yaml            # Security groups
 │   ├── master.yaml              # Root stack referencing all modules
-│   └── parameters.json          # Parameter file used for deployment
 └── README.md
-
-
 ---
 
 🚀 Deployment Guide
