@@ -44,37 +44,54 @@ jobs:
     - name: Deploy CloudFormation Stack
       run: |
         STACK_NAME=${{ github.event.inputs.stack }}-${{ github.event.inputs.environment }}
-
-        echo "⏳ Deploying CloudFormation stack: $STACK_NAME"
+        echo "🚀 Deploying CloudFormation stack: $STACK_NAME"
+        
         aws cloudformation deploy \
           --template-file Project/master.yaml \
           --stack-name $STACK_NAME \
           --parameter-overrides file://Project/config/env.json \
           --capabilities CAPABILITY_NAMED_IAM
 
-    - name: Monitor CloudFormation Events
+    - name: Monitor CloudFormation Events (Tabular Format)
       run: |
         STACK_NAME=${{ github.event.inputs.stack }}-${{ github.event.inputs.environment }}
 
-        echo "📡 Monitoring stack events for: $STACK_NAME"
+        get_nested_stacks() {
+          aws cloudformation describe-stack-resources \
+            --stack-name $1 \
+            --query "StackResources[?ResourceType=='AWS::CloudFormation::Stack'].PhysicalResourceId" \
+            --output text
+        }
+
+        print_stack_events() {
+          local stack=$1
+          echo "📋 Events for stack: $stack"
+          aws cloudformation describe-stack-events \
+            --stack-name "$stack" \
+            --max-items 10 \
+            --query 'StackEvents[?ResourceStatus!=`DELETE_COMPLETE`].[Timestamp, LogicalResourceId, ResourceType, ResourceStatus, ResourceStatusReason]' \
+            --output table || true
+        }
+
         COMPLETE=0
         while [ $COMPLETE -eq 0 ]; do
-          aws cloudformation describe-stack-events \
-            --stack-name $STACK_NAME \
-            --max-items 5 \
-            --query 'StackEvents[?ResourceStatus!=`DELETE_COMPLETE`].[Timestamp, LogicalResourceId, ResourceType, ResourceStatus, ResourceStatusReason]' \
-            --output table
+          echo "⏳ Polling latest events for $STACK_NAME and nested stacks..."
+
+          print_stack_events "$STACK_NAME"
+          for nested in $(get_nested_stacks "$STACK_NAME"); do
+            print_stack_events "$nested"
+          done
 
           STATUS=$(aws cloudformation describe-stacks \
-            --stack-name $STACK_NAME \
+            --stack-name "$STACK_NAME" \
             --query "Stacks[0].StackStatus" \
             --output text)
 
-          echo "🔄 Current Stack Status: $STATUS"
+          echo "🔄 Stack Status: $STATUS"
 
           case "$STATUS" in
             *IN_PROGRESS)
-              sleep 15
+              sleep 20
               ;;
             *ROLLBACK*|*FAILED*)
               echo "❌ Deployment failed with status: $STATUS"
