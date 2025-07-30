@@ -45,10 +45,21 @@ Secrets Manager pre-provisioned (if not created via template)
 Create a key pair for login to webapp if any issue happens with ssm.
 
 
+---
+
+2. 🔁 Clone the Repository
+
+To get started, clone this repository and switch to the `Prod` branch:
+
+```bash
+git clone https://github.com/jitheeshjames96/Shoplystproject.git
+cd Shoplystproject
+git checkout Prod
+cd Project
 
 ---
 
-2. 🧩 Upload Code to S3
+3. 🧩 Upload Code to S3
 
 aws s3 cp Project/ s3://my-cfn-bucket/Project/ --recursive
 update the compute.yaml userdata section with your s3 url
@@ -56,7 +67,7 @@ And update parameter values in env.json file inside config folder.
 
 ---
 
-3. ☁️ Deploy the Master Stack
+4. ☁️ Deploy the Master Stack
 
 aws cloudformation create-stack \
   --stack-name ShoplystInfra \
@@ -67,7 +78,7 @@ aws cloudformation create-stack \
 
 ---
 
-4. 🔄 Delete Stack
+5. 🔄 Delete Stack
 
 aws cloudformation delete-stack --stack-name ShoplystInfra
 
