@@ -1,0 +1,51 @@
+name: Delete CloudFormation Stack
+
+on:
+  workflow_dispatch:
+    inputs:
+      stack:
+        description: "Stack name"
+        required: true
+        default: shoplyst-stack
+      environment:
+        description: "Environment (e.g., dev, prod)"
+        required: true
+        default: dev
+
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1
+
+    - name: Delete CloudFormation Stack
+      run: |
+        STACK_NAME=${{ github.event.inputs.stack }}-${{ github.event.inputs.environment }}
+        echo "🗑️ Deleting stack: $STACK_NAME"
+        aws cloudformation delete-stack --stack-name $STACK_NAME
+
+    - name: Monitor Stack Deletion
+      run: |
+        STACK_NAME=${{ github.event.inputs.stack }}-${{ github.event.inputs.environment }}
+        echo "⌛ Waiting for deletion to complete..."
+
+        while true; do
+          STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].StackStatus" --output text 2>/dev/null || echo "DELETE_COMPLETE")
+
+          if [[ "$STATUS" == "DELETE_COMPLETE" ]]; then
+            echo "✅ Stack deleted successfully."
+            break
+          elif [[ "$STATUS" == "DELETE_IN_PROGRESS" ]]; then
+            echo "🧹 Still deleting..."
+            sleep 10
+          else
+            echo "❌ Unexpected status or deletion failed: $STATUS"
+            exit 1
+          fi
+        done
