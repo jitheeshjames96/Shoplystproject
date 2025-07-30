@@ -60,27 +60,27 @@ Resources:
       Port: 80
       Protocol: HTTP
 
+  Resources:
   LaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
-      LaunchTemplateName: WebAppTemplate
+      LaunchTemplateName: !Sub "${AWS::StackName}-LT"
       LaunchTemplateData:
-        ImageId: ami-0d0ad8bb301edb745
         InstanceType: t3.micro
-        SecurityGroupIds:
-          - !Ref WebSG
+        ImageId: ami-0abcdef1234567890  # Replace with valid AMI ID
         KeyName: !Ref KeyName
-        IamInstanceProfile:
-          Name: !ImportValue EC2InstanceProfile
+        SecurityGroupIds:
+          - !Ref InstanceSecurityGroup
         UserData:
-          Fn::Base64: |
-            #!/bin/bash
-            aws s3 cp ${WebBootstrap} /tmp/user-data-script.sh
-            aws s3 cp ${DBBootstrap} /tmp/bootstrap.sh
-            chmod +x /tmp/user-data-script.sh
-            chmod +x /tmp/bootstrap.sh
-            bash /tmp/user-data-script.sh
-            bash /tmp/bootstrap.sh ${DBSecretArn} ${DBEndpoint}
+          Fn::Base64:
+            Fn::Sub: |
+              #!/bin/bash
+              aws s3 cp ${WebBootstrap} /tmp/user-data-script.sh
+              aws s3 cp ${DBBootstrap} /tmp/bootstrap.sh
+              chmod +x /tmp/user-data-script.sh
+              chmod +x /tmp/bootstrap.sh
+              bash /tmp/user-data-script.sh
+              bash /tmp/bootstrap.sh ${DBSecretArn} ${DBEndpoint}
 
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
