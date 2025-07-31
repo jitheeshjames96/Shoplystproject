@@ -83,3 +83,9 @@ Resources:
         DBEndpoint: !GetAtt RDSStack.Outputs.DBEndpoint
         Email: !Ref Email
         S3BucketName: !Ref S3BucketName
+
+Outputs:
+  ALBDNSName:
+    Description: "ALB DNS from ComputeStack"
+    Value: !ImportValue
+      Fn::Sub: "${ComputeStack}-ALBDNSName"
