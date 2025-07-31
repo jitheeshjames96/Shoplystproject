@@ -16,26 +16,39 @@ Parameters:
     Description: S3 URL for rds.yaml
   VpcCIDR:
     Type: String
+    Description: VPC CIDR Range
   PublicSubnet1CIDR:
     Type: String
+    Description: CIDR Range for Public Subnet
   PublicSubnet2CIDR:
     Type: String
+    Description: CIDR Range for Public Subnet
   PrivateSubnet1CIDR:
     Type: String
+    Description: CIDR Range for Private Subnet
   PrivateSubnet2CIDR:
     Type: String
+    Description: CIDR Range for Private Subnet
   DBUsername:
     Type: String
+    Description: RDS Master username
   DBPassword:
     Type: String
+    Description: RDS Master password, please don't share with anyone
   KeyName:
     Type: String
+    Description: Keypair name for Webapp ec2
+  S3BucketName:
+    Type: String
+    Description: S3 Bucket Name for CICD operation
   DBBootstrap:
     Type: String
   WebBootstrap:
     Type: String
   Email:
     Type: String
+    Description: Email address to get Notification on ASG
+    
 
 Resources:
   VPCStack:
@@ -86,3 +99,4 @@ Resources:
         DBBootstrap: !Ref DBBootstrap
         WebBootstrap: !Ref WebBootstrap
         Email: !Ref Email
+        S3BucketName: !Ref S3BucketName
