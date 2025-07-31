@@ -170,7 +170,7 @@ Resources:
 
 Outputs:
   ALBDNSName:
-    Description: "DNS name of the Application Load Balancer"
+    Description: "ALB DNS"
     Value: !GetAtt ALB.DNSName
     Export:
-      Name: !Sub "${AWS::StackName}-ALBDNSName"
+      Name: shoplyst-stack-dev-ComputeStack-ALBDNSName
