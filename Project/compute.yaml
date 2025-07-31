@@ -170,5 +170,7 @@ Resources:
 
 Outputs:
   ALBDNSName:
-    Description: DNS name of the Load Balancer
+    Description: "DNS name of the Application Load Balancer"
     Value: !GetAtt ALB.DNSName
+    Export:
+      Name: !Sub "${AWS::StackName}-ALBDNSName"
