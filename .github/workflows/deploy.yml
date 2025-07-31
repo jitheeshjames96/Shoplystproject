@@ -118,3 +118,22 @@ jobs:
           --output text)
 
         echo "🌐 Your web app is live at: http://$ALB_URL"
+
+
+    - name: Restore Project from S3 Backup on Failure
+      if: failure()
+      run: |
+        echo "⚠️ Stack creation failed. Attempting to restore Project folder from backup..."
+        DATE=$(date +%Y-%m-%d-%H%M)  # Same pattern used during backup
+        BUCKET="codebuildjitheesh"
+
+        # Find the latest backup (uses list, sorts, and picks last one)
+        BACKUP_PREFIX=$(aws s3 ls s3://$BUCKET/ | grep Project_bkp_ | sort | tail -n 1 | awk '{print $2}' | sed 's#/##')
+
+        if [ -n "$BACKUP_PREFIX" ]; then
+          echo "🔄 Restoring from backup: $BACKUP_PREFIX"
+          aws s3 rm s3://$BUCKET/Project/ --recursive
+          aws s3 cp s3://$BUCKET/$BACKUP_PREFIX/ s3://$BUCKET/Project/ --recursive
+        else
+          echo "❌ No backup folder found to restore from."
+        fi
