@@ -1,109 +1,108 @@
 name: Deploy CloudFormation Stack
 
-on:
-  workflow_dispatch:
-    inputs:
-      stack:
-        description: "Stack name"
-        required: true
-        default: shoplyst-stack
-      environment:
-        description: "Environment (e.g., dev, prod)"
-        required: true
-        default: dev
+on: workflow_dispatch: inputs: stack: description: "Stack name" required: true default: shoplyst-stack environment: description: "Environment (e.g., dev, prod)" required: true default: dev
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
+jobs: deploy: runs-on: ubuntu-latest environment: ${{ github.event.inputs.environment }}
 
-    steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+steps:
+- name: Checkout repo
+  uses: actions/checkout@v3
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-south-1
+- name: Configure AWS Credentials
+  uses: aws-actions/configure-aws-credentials@v2
+  with:
+    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    aws-region: ap-south-1
 
-    - name: Backup existing Project/ in S3
-      run: |
-        DATE=$(date +%Y-%m-%d-%H%M)
-        BUCKET="codebuildjitheesh"
-        BACKUP_PREFIX="Project_bkp_$DATE"
+- name: Backup existing Project/ in S3
+  run: |
+    DATE=$(date +%Y-%m-%d-%H%M)
+    BUCKET="codebuildjitheesh"
+    BACKUP_PREFIX="Project_bkp_$DATE"
 
-        aws s3 cp s3://$BUCKET/Project/ s3://$BUCKET/$BACKUP_PREFIX/ --recursive
-        aws s3 rm s3://$BUCKET/Project/ --recursive
+    aws s3 cp s3://$BUCKET/Project/ s3://$BUCKET/$BACKUP_PREFIX/ --recursive
+    aws s3 rm s3://$BUCKET/Project/ --recursive
 
-    - name: Upload new Project folder to S3
-      run: |
-        aws s3 cp Project/ s3://codebuildjitheesh/Project/ --recursive
+- name: Upload new Project folder to S3
+  run: |
+    aws s3 cp Project/ s3://codebuildjitheesh/Project/ --recursive
 
-    - name: Deploy CloudFormation Stack
-      run: |
-        STACK_NAME=${{ github.event.inputs.stack }}-${{ github.event.inputs.environment }}
-        echo "🚀 Deploying CloudFormation stack: $STACK_NAME"
-        
-        aws cloudformation deploy \
-          --template-file Project/master.yaml \
-          --stack-name $STACK_NAME \
-          --parameter-overrides file://Project/config/env.json \
-          --capabilities CAPABILITY_NAMED_IAM
+- name: Deploy CloudFormation Stack
+  run: |
+    STACK_NAME=${{ github.event.inputs.stack }}-${{ github.event.inputs.environment }}
+    echo "🚀 Deploying CloudFormation stack: $STACK_NAME"
+    aws cloudformation deploy \
+      --template-file Project/master.yaml \
+      --stack-name $STACK_NAME \
+      --parameter-overrides file://Project/config/env.json \
+      --capabilities CAPABILITY_NAMED_IAM
 
-    - name: Monitor CloudFormation Events (Tabular Format)
-      run: |
-        STACK_NAME=${{ github.event.inputs.stack }}-${{ github.event.inputs.environment }}
+- name: Monitor CloudFormation Events (Tabular Format)
+  run: |
+    STACK_NAME=${{ github.event.inputs.stack }}-${{ github.event.inputs.environment }}
 
-        get_nested_stacks() {
-          aws cloudformation describe-stack-resources \
-            --stack-name $1 \
-            --query "StackResources[?ResourceType=='AWS::CloudFormation::Stack'].PhysicalResourceId" \
-            --output text
-        }
+    get_nested_stacks() {
+      aws cloudformation describe-stack-resources \
+        --stack-name $1 \
+        --query "StackResources[?ResourceType=='AWS::CloudFormation::Stack'].PhysicalResourceId" \
+        --output text
+    }
 
-        print_stack_events() {
-          local stack=$1
-          echo "📋 Events for stack: $stack"
-          aws cloudformation describe-stack-events \
-            --stack-name "$stack" \
-            --max-items 10 \
-            --query 'StackEvents[?ResourceStatus!=`DELETE_COMPLETE`].[Timestamp, LogicalResourceId, ResourceType, ResourceStatus, ResourceStatusReason]' \
-            --output table || true
-        }
+    print_stack_events() {
+      local stack=$1
+      echo "📋 Events for stack: $stack"
+      aws cloudformation describe-stack-events \
+        --stack-name "$stack" \
+        --max-items 10 \
+        --query 'StackEvents[?ResourceStatus!=`DELETE_COMPLETE`].[Timestamp, LogicalResourceId, ResourceType, ResourceStatus, ResourceStatusReason]' \
+        --output table || true
+    }
 
-        COMPLETE=0
-        while [ $COMPLETE -eq 0 ]; do
-          echo "⏳ Polling latest events for $STACK_NAME and nested stacks..."
+    COMPLETE=0
+    while [ $COMPLETE -eq 0 ]; do
+      echo "⏳ Polling latest events for $STACK_NAME and nested stacks..."
 
-          print_stack_events "$STACK_NAME"
-          for nested in $(get_nested_stacks "$STACK_NAME"); do
-            print_stack_events "$nested"
-          done
+      print_stack_events "$STACK_NAME"
+      for nested in $(get_nested_stacks "$STACK_NAME"); do
+        print_stack_events "$nested"
+      done
 
-          STATUS=$(aws cloudformation describe-stacks \
-            --stack-name "$STACK_NAME" \
-            --query "Stacks[0].StackStatus" \
-            --output text)
+      STATUS=$(aws cloudformation describe-stacks \
+        --stack-name "$STACK_NAME" \
+        --query "Stacks[0].StackStatus" \
+        --output text)
 
-          echo "🔄 Stack Status: $STATUS"
+      echo "🔄 Stack Status: $STATUS"
 
-          case "$STATUS" in
-            *IN_PROGRESS)
-              sleep 20
-              ;;
-            *ROLLBACK*|*FAILED*)
-              echo "❌ Deployment failed with status: $STATUS"
-              exit 1
-              ;;
-            *COMPLETE)
-              echo "✅ Deployment finished with status: $STATUS"
-              COMPLETE=1
-              ;;
-            *)
-              echo "⚠️ Unknown status: $STATUS"
-              exit 1
-              ;;
-          esac
-        done
+      case "$STATUS" in
+        *IN_PROGRESS)
+          sleep 20
+          ;;
+        *ROLLBACK*|*FAILED*)
+          echo "❌ Deployment failed with status: $STATUS"
+          exit 1
+          ;;
+        *COMPLETE)
+          echo "✅ Deployment finished with status: $STATUS"
+          COMPLETE=1
+          ;;
+        *)
+          echo "⚠️ Unknown status: $STATUS"
+          exit 1
+          ;;
+      esac
+    done
+
+- name: Print ALB DNS Output
+  run: |
+    STACK_NAME=${{ github.event.inputs.stack }}-${{ github.event.inputs.environment }}
+    echo "🔎 Fetching ALB DNS output..."
+
+    ALB_URL=$(aws cloudformation describe-stacks \
+      --stack-name $STACK_NAME \
+      --query "Stacks[0].Outputs[?OutputKey=='ALBDNSName'].OutputValue" \
+      --output text)
+
+    echo "🌐 Your web app is live at: http://$ALB_URL"
+
