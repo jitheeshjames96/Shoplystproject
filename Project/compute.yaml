@@ -81,8 +81,8 @@ Resources:
               aws s3 cp s3://${S3BucketName}/Project/scripts/bootstrap.sh /tmp/bootstrap.sh
               chmod +x /tmp/user-data-script.sh
               chmod +x /tmp/bootstrap.sh
-              bash /tmp/user-data-script.sh
-              bash /tmp/bootstrap.sh ${DBSecretArn} ${DBEndpoint}
+              bash /tmp/user-data-script.sh > /tmp/userdata-status.txt 2>&1
+              bash /tmp/bootstrap.sh ${DBSecretArn} ${DBEndpoint} > /tmp/rds-bootstrap-status.txt 2>&1
 
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
