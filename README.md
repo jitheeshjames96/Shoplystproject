@@ -112,7 +112,7 @@ rds.yaml references the ARN dynamically and passes it to RDS
 
 
 
-## 🚀 GitHub Actions Automation
+🚀 GitHub Actions Automation
 
 The repository is fully automated using GitHub Actions:
 
@@ -131,6 +131,8 @@ The repository is fully automated using GitHub Actions:
 ---
 
 ## 🔐 Required GitHub Secrets
+
+These can be saved in git secrets, risky to do this but only authotized person can only see.
 
 | Secret Name              | Purpose                         |
 |--------------------------|----------------------------------|
@@ -162,18 +164,6 @@ s3://codebuildjitheesh/Project_bkp_<YYYY-MM-DD-HHMM>/
   {
     "ParameterKey": "DBBootstrap",
     "ParameterValue": "https://codebuildjitheesh.s3.ap-south-1.amazonaws.com/Project/scripts/bootstrap.sh"
-  },
-  {
-    "ParameterKey": "KeyName",
-    "ParameterValue": "shoplyst-project-key"
-  },
-  {
-    "ParameterKey": "DBUsername",
-    "ParameterValue": "admin"
-  },
-  {
-    "ParameterKey": "DBPassword",
-    "ParameterValue": "ShaLyst2025"
   },
   ...
 ]
