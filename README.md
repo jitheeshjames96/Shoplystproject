@@ -257,6 +257,61 @@ Status is continuously polled (until *_COMPLETE or *_FAILED)
 
 ---
 
+
+📚 References
+
+🔹 Official AWS Documentation
+
+AWS CloudFormation Overview
+
+Using Nested Stacks in CloudFormation
+
+CloudFormation Parameters & Outputs
+
+Amazon EC2 Auto Scaling Groups
+
+Application Load Balancer (ALB)
+
+Amazon RDS Multi-AZ Deployments
+
+IAM Roles for EC2 Instances
+
+AWS Secrets Manager
+
+AWS GitHub Action: Configure AWS Credentials
+
+GitHub Actions Workflow Syntax
+
+
+
+---
+
+🔹 Community Blogs & Best Practices
+
+AWS Well-Architected Framework
+
+How to Structure Your CloudFormation Template Like a Pro
+
+CI/CD with GitHub Actions and AWS CloudFormation
+
+
+
+---
+
+🔹 Developer Tools & Community Support
+
+ChatGPT by OpenAI — for architectural brainstorming, automation scripting, and IaC troubleshooting.
+
+Stack Overflow — for resolving specific CloudFormation, EC2, IAM, and GitHub Actions errors.
+
+GitHub Discussions & Issues — for community-driven fixes, examples, and action support.
+
+AWS re:Post — AWS’s official Q&A community platform.
+
+
+---
+
+
 👤 Author
 
 Jitheesh James
@@ -265,3 +320,4 @@ Jitheesh James
 
 Maintained by Jitheesh James
 📩 jitheeshjames27@gmail.com
+
