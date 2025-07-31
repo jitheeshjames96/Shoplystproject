@@ -29,10 +29,6 @@ Parameters:
   S3BucketName:
     Type: String
     Description: S3 Bucket Name for CICD operation
-  DBBootstrap:
-    Type: String
-  WebBootstrap:
-    Type: String
   Email:
     Type: String
     Description: Email address to get Notification on ASG
