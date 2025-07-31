@@ -28,6 +28,8 @@ Parameters:
     Type: String
   Email:
     Type: String
+  S3BucketName:
+    Type: String
 
 Resources:
   ALB:
@@ -72,15 +74,15 @@ Resources:
         InstanceType: t3.micro
         SecurityGroupIds:
           - !Ref WebSG
-        KeyName: shoplyst-project-key
+        KeyName: !Ref KeyName
         IamInstanceProfile:
           Name: !ImportValue EC2InstanceProfile
         UserData:
           Fn::Base64:
             Fn::Sub: |
               #!/bin/bash
-              aws s3 cp ${WebBootstrap} /tmp/user-data-script.sh
-              aws s3 cp ${DBBootstrap} /tmp/bootstrap.sh
+              aws s3 cp s3://${S3BucketName}/Project/scripts/user-data-script.sh /tmp/user-data-script.sh
+              aws s3 cp s3://${S3BucketName}/Project/scripts/bootstrap.sh /tmp/bootstrap.sh
               chmod +x /tmp/user-data-script.sh
               chmod +x /tmp/bootstrap.sh
               bash /tmp/user-data-script.sh
