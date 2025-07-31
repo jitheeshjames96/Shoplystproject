@@ -2,18 +2,6 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: Master CloudFormation template to deploy web application infrastructure using nested stacks
 
 Parameters:
-  VpcTemplateUrl:
-    Type: String
-    Description: S3 URL for vpc.yaml
-  SecurityTemplateUrl:
-    Type: String
-    Description: S3 URL for security.yaml
-  ComputeTemplateUrl:
-    Type: String
-    Description: S3 URL for compute.yaml
-  RdsTemplateUrl:
-    Type: String
-    Description: S3 URL for rds.yaml
   VpcCIDR:
     Type: String
     Description: VPC CIDR Range
