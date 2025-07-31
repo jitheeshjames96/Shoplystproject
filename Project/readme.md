@@ -45,10 +45,21 @@ Secrets Manager pre-provisioned (if not created via template)
 Create a key pair for login to webapp if any issue happens with ssm.
 
 
+---
+
+2. 🔁 Clone the Repository
+
+To get started, clone this repository and switch to the `Prod` branch:
+
+```bash
+git clone https://github.com/jitheeshjames96/Shoplystproject.git
+cd Shoplystproject
+git checkout Prod
+cd Project
 
 ---
 
-2. 🧩 Upload Code to S3
+3. 🧩 Upload Code to S3
 
 aws s3 cp Project/ s3://my-cfn-bucket/Project/ --recursive
 update the compute.yaml userdata section with your s3 url
@@ -56,7 +67,7 @@ And update parameter values in env.json file inside config folder.
 
 ---
 
-3. ☁️ Deploy the Master Stack
+4. ☁️ Deploy the Master Stack
 
 aws cloudformation create-stack \
   --stack-name ShoplystInfra \
@@ -67,7 +78,7 @@ aws cloudformation create-stack \
 
 ---
 
-4. 🔄 Delete Stack
+5. 🔄 Delete Stack
 
 aws cloudformation delete-stack --stack-name ShoplystInfra
 
@@ -93,15 +104,144 @@ rds.yaml references the ARN dynamically and passes it to RDS
 
 
 
+
 ---
 
-🛠️ To-Do / Improvements
+💻💻💻💻💻💻
 
-[ ] Add logging/monitoring using CloudWatch
 
-[ ] Add optional Bastion setup for database debugging
 
-[ ] CI/CD pipeline integration (e.g., CodePipeline, Git Actions)
+
+🚀 GitHub Actions Automation
+
+The repository is fully automated using GitHub Actions:
+
+### 🔄 `Deploy CloudFormation Stack`
+
+- **Backs up** `Project/` folder from S3 to `Project_bkp_<timestamp>/`
+- **Uploads** current repo’s `Project/` files to S3
+- **Deploys** CloudFormation stack using `master.yaml`
+- **Monitors** events from all nested stacks in real-time (tabular output)
+
+### 🧹 `Delete CloudFormation Stack`
+
+- Deletes the entire stack
+- Shows **events** from the deleted parent + nested stacks (tabular format)
+
+---
+
+## 🔐 Required GitHub Secrets
+
+These can be saved in git secrets, risky to do this but only authotized person can only see.
+
+| Secret Name              | Purpose                         |
+|--------------------------|----------------------------------|
+| `AWS_ACCESS_KEY_ID`      | AWS access key for IAM user     |
+| `AWS_SECRET_ACCESS_KEY`  | AWS secret access key           |
+
+---
+
+## 📦 S3 Structure
+
+CloudFormation templates and scripts are uploaded to:
+
+s3://codebuildjitheesh/Project/
+
+Backup is created automatically as:
+
+s3://codebuildjitheesh/Project_bkp_<YYYY-MM-DD-HHMM>/
+
+---
+
+## ⚙️ Parameters in `config/env.json`
+
+```json
+[
+  {
+    "ParameterKey": "WebBootstrap",
+    "ParameterValue": "https://codebuildjitheesh.s3.ap-south-1.amazonaws.com/Project/scripts/user-data-script.sh"
+  },
+  {
+    "ParameterKey": "DBBootstrap",
+    "ParameterValue": "https://codebuildjitheesh.s3.ap-south-1.amazonaws.com/Project/scripts/bootstrap.sh"
+  },
+  ...
+]
+
+Update this file as needed per deployment.
+
+
+---
+
+▶️ Deploying from GitHub
+
+1. Go to Actions > Deploy CloudFormation Stack
+
+
+2. Click Run workflow
+
+
+3. Enter:
+
+stack: your stack name (e.g., shoplyst-stack)
+
+environment: dev, prod, etc.
+
+
+
+4. The workflow:
+
+Backs up old S3 folder
+
+Uploads new files
+
+Deploys CloudFormation
+
+Monitors events from parent + nested stacks
+
+
+
+
+
+---
+
+🧹 Deleting from GitHub
+
+1. Go to Actions > Delete CloudFormation Stack
+
+
+2. Enter same stack and environment
+
+
+3. Deletes the stack and prints latest events
+
+
+
+
+---
+
+📊 Live Monitoring of Events
+
+During deploy and delete workflows:
+
+Events are shown for both parent and nested stacks
+
+Output is printed in tabular format for readability
+
+Status is continuously polled (until *_COMPLETE or *_FAILED)
+
+
+
+---
+
+💡 Future Enhancements
+
+
+⏳ GitHub approval workflow for prod (via environments)
+
+📣 Email/Slack alerts on deploy success/failure
+
+📋 Parameter schema validation
 
 
 ---
@@ -120,3 +260,8 @@ rds.yaml references the ARN dynamically and passes it to RDS
 👤 Author
 
 Jitheesh James
+
+📧 Contact
+
+Maintained by Jitheesh James
+📩 jitheeshjames27@gmail.com
