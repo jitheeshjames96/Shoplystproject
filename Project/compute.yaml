@@ -66,13 +66,13 @@ Resources:
   LaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
-      LaunchTemplateName: !Sub "${AWS::StackName}-LT"
+      LaunchTemplateName: "WebAppTemplate"
       LaunchTemplateData:
         InstanceType: t3.micro
-        ImageId: ami-0abcdef1234567890  # Replace with valid AMI ID
+        ImageId: ami-0d0ad8bb301edb745
         KeyName: !Ref KeyName
         SecurityGroupIds:
-          - !Ref InstanceSecurityGroup
+          - !Ref WebSG
         UserData:
           Fn::Base64:
             Fn::Sub: |
