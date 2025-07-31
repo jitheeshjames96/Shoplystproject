@@ -22,10 +22,6 @@ Parameters:
     Type: String
   DBEndpoint:
     Type: String
-  DBBootstrap:
-    Type: String
-  WebBootstrap:
-    Type: String
   Email:
     Type: String
   S3BucketName:
