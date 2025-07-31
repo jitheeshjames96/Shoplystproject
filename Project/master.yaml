@@ -54,7 +54,7 @@ Resources:
   VPCStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Ref VpcTemplateUrl
+      TemplateURL: !Sub "https://${S3BucketName}.s3.amazonaws.com/Project/vpc.yaml"
       Parameters:
         VpcCIDR: !Ref VpcCIDR
         PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
@@ -65,14 +65,15 @@ Resources:
   SecurityStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Ref SecurityTemplateUrl
+      TemplateURL: !Sub "https://${S3BucketName}.s3.amazonaws.com/Project/security.yaml"
       Parameters:
         VPCID: !GetAtt VPCStack.Outputs.VPCID
+        S3BucketName: !Ref S3BucketName
 
   RDSStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Ref RdsTemplateUrl
+      TemplateURL: !Sub "https://${S3BucketName}.s3.amazonaws.com/Project/rds.yaml"
       Parameters:
         DBUsername: !Ref DBUsername
         DBPassword: !Ref DBPassword
@@ -84,7 +85,7 @@ Resources:
   ComputeStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Ref ComputeTemplateUrl
+      TemplateURL: !Sub "https://${S3BucketName}.s3.amazonaws.com/Project/compute.yaml"
       Parameters:
         KeyName: !Ref KeyName
         VPCID: !GetAtt VPCStack.Outputs.VPCID
@@ -96,7 +97,5 @@ Resources:
         WebSG: !GetAtt SecurityStack.Outputs.WebSecurityGroup
         DBSecretArn: !GetAtt RDSStack.Outputs.DBSecretArn
         DBEndpoint: !GetAtt RDSStack.Outputs.DBEndpoint
-        DBBootstrap: !Ref DBBootstrap
-        WebBootstrap: !Ref WebBootstrap
         Email: !Ref Email
         S3BucketName: !Ref S3BucketName
