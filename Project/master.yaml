@@ -26,7 +26,6 @@ Parameters:
   KeyName:
     Type: String
     Description: Keypair name for Webapp ec2 as optional
-    Default: ""
   S3BucketName:
     Type: String
     Description: S3 Bucket Name for CICD operation
