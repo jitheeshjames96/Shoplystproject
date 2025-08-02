@@ -25,7 +25,9 @@ Parameters:
     Description: RDS Master password, please don't share with anyone
   KeyName:
     Type: String
-    Description: Keypair name for Webapp ec2
+    Description: Keypair name for Webapp ec2 as optional
+    Default: ""
+    AllowedPattern: ".*"
   S3BucketName:
     Type: String
     Description: S3 Bucket Name for CICD operation
