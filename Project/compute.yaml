@@ -70,7 +70,7 @@ Resources:
         InstanceType: t3.micro
         SecurityGroupIds:
           - !Ref WebSG
-        KeyName: !If [HasKey, !Ref KeyName, !Ref "AWS::NoValue"]
+        KeyName: !Ref KeyName
         IamInstanceProfile:
           Name: !ImportValue EC2InstanceProfile
         UserData:
