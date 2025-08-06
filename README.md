@@ -12,7 +12,7 @@ This project deploys a **secure, scalable, and modular AWS infrastructure** for 
 - **Private RDS (MySQL)** with Multi-AZ setup and Secrets Manager integration
 - Security Groups with least privilege
 - Modular stack split by function (`vpc.yaml`, `compute.yaml`, `rds.yaml`, `security.yaml`, etc.)
-- Parameterized deployment using `parameters.json`
+- Parameterized deployment using `env.json`
 
 ---
 
